@@ -1,0 +1,10 @@
+{
+    "name": "1g1g Music for Chrome",
+    "version": "0.1",
+    "description": "亦歌音乐Chrome版",
+    "browser_action": {
+        "default_icon": "images/icon_16.png",
+        "popup": "popup.html"
+    },
+    "permissions": ["tabs", "http://*.1g1g.com/"]
+}
