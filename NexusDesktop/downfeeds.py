@@ -2,6 +2,8 @@
 import logging.config
 logging.config.fileConfig('logging.cfg')
 
+from optparse import OptionParser
+
 import os, codecs, re, logging
 import urllib, urllib2, cookielib, urlparse, feedparser
 
@@ -25,7 +27,7 @@ def get_pic_info(url):
     pattern = r'<a href=\"\/get\/%s\/\?t=(?P<token>.*?)\"' % pic_id
     match = re.search(pattern, html, flags=re.I|re.M|re.S)
     if match:
-        return { 'id': pic_id, 'token': match.group('token'), 'size': DEFAULT_RESOLUTION }
+        return { 'id': pic_id, 'token': match.group('token'), 'size': options.size }
 
 def get_pic_file(pic_info):
     redirect_url = 'http://www.desktopnexus.com/dl/inline/%(id)s/%(size)s/%(token)s' % pic_info
@@ -56,14 +58,21 @@ def readfeeds(feedurl):
             try:
                 download_pic(item.link)
             except Exception as e:
-                logging.error('  %s' % e)
+                logging.error('  Error: %s' % e)
     except Exception as e:
         logging.error(e)
 
 if __name__ == '__main__':
+    # Setup optparser
+    parser = OptionParser()
+    parser.add_option('-f', '--feed', dest='feed', help='specific a feed url')
+    parser.add_option('-p', '--page', dest='page', help='specific a page that includes wallpaper list')
+    parser.add_option('-s', '--size', dest='size', help='specific the wallpaper size, default 1440x900', default='1440x900')
+    (options, args) = parser.parse_args()
+
     logging.info('Initial enviroment..')
     initial()
 
-    feedurl = 'http://www.desktopnexus.com/feed/'
-    logging.info('Reading feed: ' + feedurl)
-    readfeeds(feedurl)
+    if options.feed:
+        logging.info('Reading feed: ' + options.feed)
+        readfeeds(options.feed)
