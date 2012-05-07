@@ -43,5 +43,5 @@ def process_bak_files(action='restore'):
                     print source
 
 if __name__ == '__main__':
-    # process_bak_files(action='clear')
-    main()
+    process_bak_files(action='clear')
+    # main()
