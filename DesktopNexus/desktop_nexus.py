@@ -86,7 +86,7 @@ class DesktopNexus:
 
 if __name__ == '__main__':
     # Setup argparser
-    parser = ArgumentParser('DesktopNexus wallpapers downloader.')
+    parser = ArgumentParser('python desktop_nexus.py')
     parser.add_argument('-p', '--page', dest='page', required=True, \
             help='specific a page that includes wallpaper list')
     parser.add_argument('-s', '--size', dest='size', default='1440x900', \
