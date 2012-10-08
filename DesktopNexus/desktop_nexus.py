@@ -1,23 +1,22 @@
 #-*- coding: utf-8 -*-
-from optparse import OptionParser
+from argparse import ArgumentParser
 
-import os, re, logging
+import os, re, sys
 import urllib2, cookielib, urlparse
 
 RE_WALLPAPER = r'http\:\/\/[^\/\.]+\.desktopnexus\.com\/wallpaper\/\d+\/'
-CHUNK_SIZE = 1024 * 1024
+CHUNK_SIZE = 1024 * 3
 
 class DesktopNexus:
-    def __init__(self, feed=None, page=None, size=None, output_dir=None):
-        self.feed = feedurl
-        self.page = page_url
+    def __init__(self, page=None, size=None, output_dir=None):
+        self.page = page
         self.size = size
         self.output_dir = output_dir
 
     def start(self):
         print 'Making output directory:', self.output_dir
         if not os.path.exists(self.output_dir):
-            os.mkdir(self.outout_dir)
+            os.makedirs(self.output_dir)
 
         # Setup cookie
         cookie = cookielib.CookieJar()
@@ -33,7 +32,11 @@ class DesktopNexus:
         pattern = r'<a href=\"\/get\/%s\/\?t=(?P<token>.*?)\"' % pic_id
         match = re.search(pattern, html, flags=re.I|re.M|re.S)
         if match:
-            return { 'id': pic_id, 'token': match.group('token'), 'size': options.size }
+            return {'id': pic_id, 
+                    'token': match.group('token'), 
+                    'size': self.size}
+        else:
+            raise Exception('Cound not find wallpaper')
 
     def _get_pic_file(self, pic_info):
         redirect_url = 'http://www.desktopnexus.com/dl/inline/%(id)s/%(size)s/%(token)s' % pic_info
@@ -42,36 +45,54 @@ class DesktopNexus:
         return request.geturl()
 
     def _download_pic(self, url):
-        pic_info = self.get_pic_info(url)
-        pic_file = self.get_pic_file(pic_info)
+        pic_info = self._get_pic_info(url)
+        pic_file = self._get_pic_file(pic_info)
         filename = os.path.split(urlparse.urlparse(pic_file).path)[-1]
-        print'  Saving file: %s' % filename)
-        open(os.path.join(os.path.abspath(DOWNLOAD_DIR),filename), 'wb').write(urllib2.urlopen(pic_file).read())
+        filename = os.path.join(self.output_dir, filename)
+        with open(filename, 'wb') as output:
+            resp = urllib2.urlopen(pic_file)
+            total_size = int(resp.info().get('Content-Length'))
+            saved_size = 0.0
+            while saved_size != total_size:
+                chunk = resp.read(CHUNK_SIZE)
+                saved_size += len(chunk)
+                output.write(chunk)
+                self._print_progress('Saving file: %s' % filename, \
+                        saved_size / total_size * 100)
+    
+    def _print_progress(self, msg, progress):
+        sys.stdout.write('%-71s%3d%%\r' \
+                % (len(msg) <= 70 and msg or msg[:67] + '...', progress))
+        sys.stdout.flush()
+        if progress >= 100:
+            sys.stdout.write('\n')
 
     def _read_page(self):
         try:
-            html = urllib2.urlopen(self.page_url).read()
+            print 'Fetching content:', self.page
+            html = urllib2.urlopen(self.page).read()
             links = set(re.findall(RE_WALLPAPER, html, re.M|re.I))
             count = len(links)
 
             print 'Downloading wallpapers:'
             for i, link in enumerate(links):
-                print '[%2d/%d]: %s' % (i + 1, count, link)
+                print '[%d/%d]: %s' % (i + 1, count, link)
                 try:
                     self._download_pic(link)
                 except Exception as e:
-                    print '  Error:', e.message
+                    print 'Error downloading wallpaper.', e.message
         except Exception as e:
-            print e.message
+            print 'Error fetching content.', e
 
 if __name__ == '__main__':
-    # Setup optparser
-    parser = OptionParser()
-    # parser.add_option('-f', '--feed', dest='feed', help='specific a feed url')
-    parser.add_option('-p', '--page', dest='page', help='specific a page that includes wallpaper list')
-    parser.add_option('-s', '--size', dest='size', help='specific the wallpaper size, default 1440x900', default='1440x900')
-    parser.add_option('-o', '--output', desk='ouput_dir', help='specific the output directory, default to "wallpapers"', default='wallpapers')
-    (options, args) = parser.parse_args()
-
-    dn = DesktopNexus(**options)
+    # Setup argparser
+    parser = ArgumentParser('DesktopNexus wallpapers downloader.')
+    parser.add_argument('-p', '--page', dest='page', required=True, \
+            help='specific a page that includes wallpaper list')
+    parser.add_argument('-s', '--size', dest='size', default='1440x900', \
+            help='specific the wallpaper size, default to 1440x900')
+    parser.add_argument('-o', '--output', dest='output_dir', default='wallpapers', \
+            help='specific the output directory, default to "wallpapers"')
+    args = parser.parse_args()
+    dn = DesktopNexus(**args.__dict__)
     dn.start()
