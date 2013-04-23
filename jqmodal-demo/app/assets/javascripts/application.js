@@ -12,4 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jqModal
+//= require jqModalExt
+//= require global
 //= require_tree .

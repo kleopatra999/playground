@@ -4,12 +4,11 @@
     <a href="#" class="jqmClose">&times;</a>
   </div>
 
-  <div class="model-content">
+  <div class="modal-content">
     <%= yield %>
-
-    <% if options[:loading] %>
-    <div class="preloader" style="display: none"><%= image_tag 'modal_loading.gif' %></div>
-    <% end %>
   </div>
 
+  <% if options[:loading] %>
+  <div class="preloader" style="display: none">Loading...</div>
+  <% end %>
 </div>

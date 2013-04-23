@@ -26,4 +26,4 @@ jQuery ->
     # 更新对话框内容
     jqmUpdate: (html) ->
       $modal = @
-      $modal.find('.model-content').html(html)
+      $modal.find('.modal-content').html(html)
