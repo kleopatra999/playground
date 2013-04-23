@@ -1,0 +1,15 @@
+<div <% if options.has_key?(:id) %>id="<%= options[:id] %>"<% end %> class="jqmWindow <%= options[:class] %>">
+  <div class="modal-header">
+    <%= modal_title %>
+    <a href="#" class="jqmClose">&times;</a>
+  </div>
+
+  <div class="model-content">
+    <%= yield %>
+
+    <% if options[:loading] %>
+    <div class="preloader" style="display: none"><%= image_tag 'modal_loading.gif' %></div>
+    <% end %>
+  </div>
+
+</div>
