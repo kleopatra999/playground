@@ -12,4 +12,10 @@ class DemoController < ApplicationController
       format.js
     end
   end
+
+  def submit
+    respond_to do |format|
+      format.js
+    end
+  end
 end

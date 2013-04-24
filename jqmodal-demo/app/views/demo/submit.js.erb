@@ -1,0 +1,13 @@
+function random_color() {
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += '0123456789'.charAt(parseInt(10 * Math.random()));
+  }
+  return color;
+}
+
+var $modal = $('#modal_demo');
+$modal.jqmUpdate('Work is done!');
+$modal.jqmAutoHide(function() {
+  $('body').css('background', random_color());
+});
