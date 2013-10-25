@@ -6,8 +6,10 @@ class Ability
 
     if user.role.admin?
       can :manage, :all
-    else
+    elsif user.role.member?
       can :read, Topic
+    else
+      can :read, Topic, visible: :public
     end
   end
 end

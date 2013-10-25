@@ -4,6 +4,7 @@
   <tr>
     <th>Title</th>
     <th>Content</th>
+    <th>Visible</th>
     <th></th>
   </tr>
 
@@ -11,6 +12,7 @@
   <tr>
     <td><%= topic.title %></td>
     <td><%= topic.content %></td>
+    <td><%= topic.visible %></td>
     <td>
       <%= link_to 'Show', topic %>
       <%= link_to 'Edit', edit_topic_path(topic) if can? :update, Topic %>

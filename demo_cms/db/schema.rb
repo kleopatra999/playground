@@ -11,14 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131025161334) do
+ActiveRecord::Schema.define(:version => 20131025170221) do
 
   create_table "topics", :force => true do |t|
     t.string   "title"
     t.string   "content"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-    t.boolean  "public"
+    t.string   "visible"
   end
 
   create_table "users", :force => true do |t|

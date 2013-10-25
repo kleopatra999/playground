@@ -1,7 +1,7 @@
 class Topic < ActiveRecord::Base
   extend Enumerize
 
-  attr_accessible :content, :title, :public
+  attr_accessible :content, :title, :visible
 
-  enumerize :public, in: { :public => true, :private => false }, default: :public
+  enumerize :visible, in: [ :public, :private ], default: :public
 end

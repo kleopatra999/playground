@@ -4,8 +4,8 @@ class TopicsController < ApplicationController
 
   # GET /topics
   # GET /topics.json
-  def index
-    @topics = Topic.all
+  def index    
+    @topics = Topic.accessible_by(current_ability, :index)
 
     respond_to do |format|
       format.html # index.html.erb

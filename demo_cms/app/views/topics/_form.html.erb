@@ -20,9 +20,9 @@
     <%= f.text_field :content %>
   </div>
   <div class="field">
-    <%= f.label :public %><br />
-    <% Topic.public.values.each do |value| %>
-      <label><%= f.radio_button :public, value %> <%= value %></label>
+    <%= f.label :visible %><br />
+    <% Topic.visible.options.each do |text, value| %>
+      <label><%= f.radio_button :visible, value %> <%= text %></label>
     <% end %>
   </div>
   <div class="actions">
