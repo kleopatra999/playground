@@ -10,7 +10,10 @@ describe "Topics" do
   end
 
   describe "POST /topics" do
-    it "Create topic" do
+    it "Member can not create topic" do
+      post_via_redirect email: 'greatghoul@gmail.com', password: '11111111'
+      response.body.should include("Signed in successfuly.")
+
       visit new_topic_path
       fill_in "Title", with: "topic1"
       fill_in "Content", with: "content 1"
