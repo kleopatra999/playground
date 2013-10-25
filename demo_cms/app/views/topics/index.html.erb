@@ -7,7 +7,7 @@
     <th>Visible</th>
     <th></th>
   </tr>
-
+<%= cache("topics/#{current_user.try(:role) || 'non_member'}", expires_in: 6.hours) do %>
 <% @topics.each do |topic| %>
   <tr>
     <td><%= topic.title %></td>
@@ -21,6 +21,7 @@
   </tr>
 <% end %>
 </table>
+<% end %>
 
 <br />
 

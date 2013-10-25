@@ -10,6 +10,7 @@
   <%= content_tag :p, alert, class: 'alert' if alert %>
   <%= content_tag :p, notice, class: 'notice' if notice %>
 
+  
   <% if user_signed_in? %>
     <strong><%= current_user.email %></strong> (<%= current_user.role %>)
     <%= link_to 'Signout', destroy_user_session_path, method: :delete %>

@@ -9,7 +9,7 @@ class Ability
     elsif user.role.member?
       can :read, Topic
     else
-      can :read, Topic, visible: :public
+      can :read, Topic, visible: 'public'
     end
   end
 end

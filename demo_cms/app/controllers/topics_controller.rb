@@ -1,5 +1,7 @@
 class TopicsController < ApplicationController
   before_filter :authenticate_user!, except: [:index, :show]
+  after_filter :clear_topics_cache, only: [:create, :update, :destroy]
+
   load_and_authorize_resource
 
   # GET /topics
@@ -82,5 +84,10 @@ class TopicsController < ApplicationController
       format.html { redirect_to topics_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+  def clear_topics_cache
+    Rails.cache.delete_matched(/topics\/.*/)
   end
 end
