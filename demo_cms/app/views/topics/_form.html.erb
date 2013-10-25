@@ -19,7 +19,14 @@
     <%= f.label :content %><br />
     <%= f.text_field :content %>
   </div>
+  <div class="field">
+    <%= f.label :public %><br />
+    <% Topic.public.values.each do |value| %>
+      <label><%= f.radio_button :public, value %> <%= value %></label>
+    <% end %>
+  </div>
   <div class="actions">
     <%= f.submit %>
   </div>
+
 <% end %>
