@@ -5,21 +5,21 @@
     <th>Title</th>
     <th>Content</th>
     <th></th>
-    <th></th>
-    <th></th>
   </tr>
 
 <% @topics.each do |topic| %>
   <tr>
     <td><%= topic.title %></td>
     <td><%= topic.content %></td>
-    <td><%= link_to 'Show', topic %></td>
-    <td><%= link_to 'Edit', edit_topic_path(topic) %></td>
-    <td><%= link_to 'Destroy', topic, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    <td>
+      <%= link_to 'Show', topic %>
+      <%= link_to 'Edit', edit_topic_path(topic) if can? :update, Topic %>
+      <%= link_to 'Destroy', topic, method: :delete, data: { confirm: 'Are you sure?' } if can? :destroy, Topic%>
+    </td>
   </tr>
 <% end %>
 </table>
 
 <br />
 
-<%= link_to 'New Topic', new_topic_path %>
+<%= link_to 'New Topic', new_topic_path if can? :create, Topic %>
