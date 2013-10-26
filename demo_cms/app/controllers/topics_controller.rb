@@ -1,6 +1,5 @@
 class TopicsController < ApplicationController
   before_filter :authenticate_user!, except: [:index, :show]
-  after_filter :clear_topics_cache, only: [:create, :update, :destroy]
 
   load_and_authorize_resource
 
@@ -86,8 +85,4 @@ class TopicsController < ApplicationController
     end
   end
 
-  private
-  def clear_topics_cache
-    Rails.cache.delete_matched(/topics\/.*/)
-  end
 end

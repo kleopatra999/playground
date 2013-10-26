@@ -1,5 +1,6 @@
-<h1>Listing topics</h1>
-
+<%= cache("topics/#{current_user.try(:role) || 'non_member'}", expires_in: 6.hours) do %>
+<h1>Listing topics (<%= @topics.count %>)</h1>
+ 
 <table>
   <tr>
     <th>Title</th>
@@ -7,7 +8,6 @@
     <th>Visible</th>
     <th>Actions</th>
   </tr>
-<%= cache("topics/#{current_user.try(:role) || 'non_member'}", expires_in: 6.hours) do %>
 <% @topics.each do |topic| %>
   <tr>
     <td><%= topic.title %></td>
@@ -21,8 +21,7 @@
   </tr>
 <% end %>
 </table>
-<% end %>
 
-<br />
 
 <%= link_to 'New Topic', new_topic_path if can? :create, Topic %>
+<% end %>
