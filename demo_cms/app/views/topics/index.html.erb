@@ -5,7 +5,7 @@
     <th>Title</th>
     <th>Content</th>
     <th>Visible</th>
-    <th></th>
+    <th>Actions</th>
   </tr>
 <%= cache("topics/#{current_user.try(:role) || 'non_member'}", expires_in: 6.hours) do %>
 <% @topics.each do |topic| %>
